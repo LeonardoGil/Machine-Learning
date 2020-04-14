@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
@@ -9,14 +10,21 @@ namespace MachineLearning
     {
         static void Main(string[] args)
         {
-            MLContext mlContext = new MLContext();
+            try
+            {
+                MLContext mlContext = new MLContext();
 
-            //Carrega os dados da Pasta Dados
-            (IDataView trainingDataView, IDataView testDataView) = LoadData(mlContext);
+                //Carrega os dados da Pasta Dados
+                (IDataView trainingDataView, IDataView testDataView) = LoadData(mlContext);
 
-            ITransformer model = BuildAndTrainModel(mlContext, trainingDataView);
-            EvaluateModel(mlContext, testDataView, model);
-            UseModelForSinglePrediction(mlContext, model);
+                ITransformer model = BuildAndTrainModel(mlContext, trainingDataView);
+                EvaluateModel(mlContext, testDataView, model);
+                UseModelForSinglePrediction(mlContext, model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(string.Concat("Ocorreu um erro", " => ", ex.Message));
+            }
         }
 
         public static (IDataView training, IDataView testing) LoadData(MLContext mlContext)
@@ -24,6 +32,9 @@ namespace MachineLearning
             //Monta o path dos arquivos da Pasta Dados
             var trainingDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "recommendation-ratings-train.csv");
             var testDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "recommendation-ratings-test.csv");
+
+            //Correga os dados de uma coleção para um IDataView
+            IDataView otherDataView = mlContext.Data.LoadFromEnumerable(new List<MovieRating>());
 
             //Carrega os dados do arquivo para a Interface IDataView.
             //IDataView e uma Interface otimazada para guardar dados tabulados (Caracteres Alfabetico e Numerico).
@@ -36,18 +47,6 @@ namespace MachineLearning
         //Data, Transformers, and Estimators.
         public static ITransformer BuildAndTrainModel(MLContext mlContext, IDataView trainingDataView)
         {
-            //Data são os dados tabulados (IDataView)
-            //Os Estimators são usandos para transformar Data em Transformers
-            //Transformers são dados formatados, que serão utilizados como modelo para futuros testes.
-            IEstimator<ITransformer> estimator = mlContext
-                .Transforms
-                .Conversion
-                .MapValueToKey(outputColumnName: "userIdEncoded", inputColumnName: "userId")
-                .Append(mlContext
-                    .Transforms
-                    .Conversion
-                    .MapValueToKey(outputColumnName: "movieIdEncoded", inputColumnName: "movieId"));
-
             //MatrixFactorizarTrainer e um modelo COO de comparação
             //COO uma lista de tuplas (linha, coluna, valor). As entradas são classificadas primeiro pelo índice de linha e depois pelo índice de coluna, e por fim índice de valor. 
             var options = new MatrixFactorizationTrainer.Options
@@ -60,10 +59,38 @@ namespace MachineLearning
                 ApproximationRank = 100
             };
 
-            var trainerEstimator = estimator.Append(mlContext.Recommendation().Trainers.MatrixFactorization(options));
-            ITransformer model = trainerEstimator.Fit(trainingDataView);
+            //Data são os dados tabulados (IDataView)
+            //Os Estimators são usandos para transformar Data em Transformers
+            //Transformers são dados formatados, que serão utilizados como modelo para futuros testes.
+            IEstimator<ITransformer> estimator = mlContext
+                .Transforms
+                .Conversion
+                .MapValueToKey(outputColumnName: "userIdEncoded", inputColumnName: "userId")
+                .Append(mlContext
+                    .Transforms
+                    .Conversion
+                    .MapValueToKey(outputColumnName: "movieIdEncoded", inputColumnName: "movieId"))
+                .Append(mlContext
+                    .Recommendation()
+                    .Trainers
+                    .MatrixFactorization(options));
 
-            return model;
+            //Forma simplificada
+            //Obtem o mesmo resultado do metodo anterior
+            IEstimator<ITransformer> estimatorSimplificado = mlContext
+                .Transforms
+                .Conversion
+                .MapValueToKey(new[]
+                {
+                    new  InputOutputColumnPair("userIdEncoded", "userId"),
+                    new  InputOutputColumnPair("movieIdEncoded", "movieId")
+                })
+                .Append(mlContext
+                    .Recommendation()
+                    .Trainers
+                    .MatrixFactorization(options));
+
+            return estimator.Fit(trainingDataView);
         }
 
         public static void EvaluateModel(MLContext mlContext, IDataView testDataView, ITransformer model)
