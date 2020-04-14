@@ -1,4 +1,4 @@
-﻿namespace MachineLearning
+﻿namespace MachineLearningConsoleTeste.MovieTeste
 {
     public class MovieRatingPrediction
     {

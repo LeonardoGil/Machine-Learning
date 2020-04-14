@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace MachineLearning
+namespace MachineLearningConsoleTeste.MovieTeste
 {
     public class MovieRating
     {
