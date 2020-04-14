@@ -1,4 +1,4 @@
-﻿namespace GeradorDeDados
+﻿namespace GeradorDeDadosForm
 {
     partial class Gerador
     {
