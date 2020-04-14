@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineLearning", "MachineLearning\MachineLearning.csproj", "{76EC3E99-17D1-4388-8517-FDB7826505D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeradorDeDados", "GeradorDeDados\GeradorDeDados.csproj", "{C18E7111-0CFD-4FC4-B690-BA12883DD6D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76EC3E99-17D1-4388-8517-FDB7826505D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76EC3E99-17D1-4388-8517-FDB7826505D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76EC3E99-17D1-4388-8517-FDB7826505D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76EC3E99-17D1-4388-8517-FDB7826505D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18E7111-0CFD-4FC4-B690-BA12883DD6D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18E7111-0CFD-4FC4-B690-BA12883DD6D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18E7111-0CFD-4FC4-B690-BA12883DD6D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18E7111-0CFD-4FC4-B690-BA12883DD6D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {581EA449-BB55-4672-83BA-98978605967B}
+	EndGlobalSection
+EndGlobal
